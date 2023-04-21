@@ -1,0 +1,137 @@
+public class HashTable<K,V> implements SimpleMap<K,V>{
+
+    private static final int INITIAL_CAP = 5;  // a default initial capacity (set low for initial debugging)
+    private int currentCapacity = INITIAL_CAP;
+    private HashNode<K, V>[] table;
+
+    /*
+     * Here are some hints about how to declare your hash table.
+     * If you're using an ArrayList, it might look like this:
+     * 		private ArrayList<HashNode<K, V>> table;
+     * Note that you cannot declare an array of generics (i.e., an array of HashNodes) like this:
+     *          private LinkedList<HashNode<K,V>>[] table;
+     * but see here https://programming.guide/java/generic-array-creation.html for workarounds.
+     */
+
+    /* YOU WILL LIKELY WANT MORE PRIVATE VARIABLES HERE */
+
+
+    public HashTable() {  // default constructor sets capacity to default value
+
+        this(INITIAL_CAP);
+    }
+
+    public HashTable(int capacity) {  // constructor sets capacity to given value
+        /* TODO: IMPLEMENT THIS METHOD */
+        if(capacity < 0){
+            throw new IllegalArgumentException("Capacity is a negative number");
+        }
+        this.currentCapacity = capacity; //set current capacity
+        this.table = (HashNode<K,V>[]) new HashNode<?,?>[currentCapacity]; //set table
+
+        /*
+         * Here are some hints about how to allocate memory for your hash table.
+         * If you're using an array, it might look like this:
+         * 		this.table = (HashNode<K,V>[]) new HashNode<?,?>[initialCapacity];
+         * If you're using an ArrayList, it might look like this:
+         * 		this.table = new ArrayList<>(capacity); // sets list's initial capacity
+         */
+    }
+
+    // insert() adds a new key/value pair if the key is not found, otherwise it replaces
+    //    the existing key's value
+    //implements hash function to find index for a key
+    @Override
+    public void insert(K key, V value) {
+        /* TODO: IMPLEMENT THIS METHOD */
+        int index = Math.abs(key.hashCode() % this.currentCapacity);
+        int i = 0; //the spot that we are currently at
+        //while the spot is not empty and is within the table
+        while(table[index] != null && i < this.currentCapacity) {
+            if (table[index].getKey().equals(key)) { //if we are at the right key
+                table[index].setValue(value); //insert value
+                return; //done
+            }
+            index = (index + 1) % this.currentCapacity; //variable to move index forward
+            i++; //we are at a new spot
+        }
+        table[index] = new HashNode<>(key, value); //set new hashnode
+    }
+
+    @Override
+    public V retrieve(K key) {
+        /* TODO: IMPLEMENT THIS METHOD */
+        int index = Math.abs(key.hashCode() % this.currentCapacity);
+        int i = 0; //current position
+        while (table[index] !=null && i < this.currentCapacity){ //if its not the end of the table and the value isnt what you are looking for
+            if (table[index].getKey().equals(key)){ //if we have found the right key return value
+                return table[index].getValue();
+            }
+            index = (index + 1) % this.currentCapacity; // otherwise go to the next value
+            i++;//we moved up a position
+        }
+        return null;//all else fails return null
+    }
+
+
+
+    @Override
+    public boolean contains(K key) {
+        /* TODO: IMPLEMENT THIS METHOD */
+        int index = Math.abs(key.hashCode() % this.currentCapacity);
+        int i = 0;
+        while (table[index] != null && i < this.currentCapacity){ //if the spot is nto empty and we are still in the table
+            if(table[index].getKey().equals(key)){ //check to see if key equals what we are looking for
+                return true; //if so return true
+            }
+            index = (index + 1) % this.currentCapacity; //if not go to the next spot in the table
+            i++;
+        }
+        return false; //if its never found return false
+    }
+
+    @Override
+    public void remove(K key) {
+        /* TODO: IMPLEMENT THIS METHOD */
+        int index = Math.abs(key.hashCode() % this.currentCapacity);
+        int i = 0; //starting point
+        while (table[index] != null && i < this.currentCapacity) {
+            if(table[index].getKey().equals(key)){ //if we have found the key to remove
+                table[index] = null; //remove key
+                return; //done
+            }
+            index = (index + 1) % this.currentCapacity; //otherwise move to the next spot
+            i++; //increase how far you will move the next time
+        }
+    }
+
+
+    /*
+     * OPTIONAL HELPER METHODS: The next two methods will let you print out your
+     * entire hash table, or let you make sure all keys that hash to a single
+     * bucket's index get stored as they should in your table. You'll need to
+     * implement the second method; it depends on how you store entries and
+     * handle collisions. This is NOT required, but you may find it helpful when
+     * debugging and testing your code.
+     */
+
+    public void printHashTable() {
+        for (int idx=0; idx < this.currentCapacity; ++idx) {
+            System.out.print(idx + ": ");
+            printEntriesByIndex(idx);
+        }
+    }
+
+    private void printEntriesByIndex(int idx) {
+        /*
+         * To implement this method to help print out one bucket of your hash table, you need to determine:
+         * a) If there are no key/value pairs in the bucket idx, print "no entries"
+         * b) If there are key/value pairs at that bucket, use a loop to print each one.
+         *    Best to use System.out.print() and not println() so they're all on one line.
+         * c) At the end of that loop, do System.out.println() to print a new line.
+         */
+        System.out.println("Not yet implemented...");
+    }
+
+}
+
